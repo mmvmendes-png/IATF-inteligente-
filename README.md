@@ -1,2 +1,10 @@
-# IATF-inteligente-
-IATF Inteligente é um aplicativo desenvolvido para modernizar e otimizar a gestão reprodutiva de bovinos, integrando tecnologia, organização de manejos e inteligência artificial em uma única plataforma.  Voltado para médicos-veterinários, técnicos de campo, gestores e produtores rurais.
+IATF Inteligente
+Aplicativo iOS para gestão da reprodução bovina.Funcionalidades planejadas
+- Cadastro de fazendas, retiros, lotes e animais
+- Gestão de protocolos hormonais de IATF
+- Alertas de manejos reprodutivos
+- Controle de vacinas e vermífugos
+- Diagnóstico de gestação e indicadores de prenhez
+- Inteligência artificial para estimativa de prenhez
+Tecnologia
+Swift e SwiftUI para iPhone.
