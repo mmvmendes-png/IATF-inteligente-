@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#176b46">
+<title>IATF Inteligente</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif;background:#f2f5f2;color:#173529}
+header{background:#176b46;color:white;padding:26px 18px;text-align:center}
+header h1{margin:0;font-size:27px}
+header p{margin:8px 0 0}
+main{max-width:650px;margin:auto;padding:18px}
+.card{background:white;border-radius:14px;padding:18px;margin-bottom:15px;box-shadow:0 2px 8px #0001}
+h2{font-size:19px;margin-top:0}
+label{display:block;margin-top:12px;font-weight:600}
+input,select,button{width:100%;padding:13px;margin-top:6px;border-radius:9px;font-size:16px}
+input,select{border:1px solid #ccd7cf;background:white}
+button{background:#176b46;color:white;border:0;font-weight:bold;margin-top:15px}
+nav{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+nav button{margin:0;font-size:14px;min-height:64px}
+.item{padding:10px;border-bottom:1px solid #eee}
+small{color:#52665b}
+</style>
+</head>
+<body>
+<header>
+<h1>🐄 IATF Inteligente</h1>
+<p>Gestão da reprodução bovina</p>
+</header>
+<main>
+<section class="card">
+<h2>Menu principal</h2>
+<nav>
+<button onclick="mostrar('fazendas')">🏡 Fazendas</button>
+<button onclick="mostrar('animais')">🐂 Animais</button>
+<button onclick="mostrar('protocolos')">💉 Protocolos</button>
+<button onclick="mostrar('resultados')">📊 Resultados</button>
+</nav>
+</section>
+<section class="card" id="fazendas">
+<h2>Cadastrar fazenda e retiro</h2>
+<form id="formFazenda">
+<label>Nome da fazenda<input id="fazenda" required></label>
+<label>Nome do retiro<input id="retiro" required></label>
+<button type="submit">Salvar cadastro</button>
+</form>
+<div id="listaFazendas"></div>
+</section>
+<section class="card" id="animais" hidden>
+<h2>Cadastrar animal</h2>
+<form id="formAnimal">
+<label>Número do animal<input id="numero" required></label>
+<label>Lote<input id="lote" required></label>
+<label>Categoria
+<select id="categoria">
+<option>Novilha</option>
+<option>Primípara</option>
+<option>Multípara</option>
+</select></label>
+<label>Observações<input id="observacoes"></label>
+<button type="submit">Salvar animal</button>
+</form>
+<div id="listaAnimais"></div>
+</section>
+<section class="card" id="protocolos" hidden>
+<h2>Protocolos hormonais</h2>
+<p>Cadastro de protocolos e alertas de manejo: próxima etapa.</p>
+</section>
+<section class="card" id="resultados" hidden>
+<h2>Resultados reprodutivos</h2>
+<p>Diagnóstico de gestação e indicadores: próxima etapa.</p>
+</section>
+<small>Versão inicial. Dados salvos somente neste navegador.</small>
+</main>
+<script>
+const chave='iatf-inteligente-v1';
+let dados;
+try {
+ dados=JSON.parse(localStorage.getItem(chave))||{fazendas:[],animais:[]};
+ if(!Array.isArray(dados.fazendas)||!Array.isArray(dados.animais)) throw Error();
+} catch(e) {dados={fazendas:[],animais:[]};}
+function salvar(){localStorage.setItem(chave,JSON.stringify(dados));renderizar();}
+function mostrar(id){
+ ['fazendas','animais','protocolos','resultados'].forEach(x=>{
+ document.getElementById(x).hidden=x!==id;
+ });
+}
+function renderLista(id,itens,campos){
+ const el=document.getElementById(id);
+ el.replaceChildren();
+ itens.forEach(item=>{
+ const div=document.createElement('div');
+ div.className='item';
+ div.textContent=campos.map(c=>item[c]||'').filter(Boolean).join(' | ');
+ el.appendChild(div);
+ });
+}
+function renderizar(){
+ renderLista('listaFazendas',dados.fazendas,['fazenda','retiro']);
+ renderLista('listaAnimais',dados.animais,['numero','lote','categoria','observacoes']);
+}
+document.getElementById('formFazenda').addEventListener('submit',e=>{
+ e.preventDefault();
+ dados.fazendas.push({fazenda:document.getElementById('fazenda').value.trim(),retiro:document.getElementById('retiro').value.trim()});
+ salvar();e.target.reset();
+});
+document.getElementById('formAnimal').addEventListener('submit',e=>{
+ e.preventDefault();
+ dados.animais.push({
+ numero:document.getElementById('numero').value.trim(),
+ lote:document.getElementById('lote').value.trim(),
+ categoria:document.getElementById('categoria').value,
+ observacoes:document.getElementById('observacoes').value.trim()
+ });
+ salvar();e.target.reset();
+});
+renderizar();
+</script>
+</body>
+</html>
